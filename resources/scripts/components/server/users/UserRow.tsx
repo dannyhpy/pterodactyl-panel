@@ -15,6 +15,7 @@ interface Props {
 
 export default ({ subuser }: Props) => {
     const uuid = useStoreState((state) => state.user!.data!.uuid);
+    const rootAdmin = useStoreState((state) => state.user!.data!.rootAdmin);
     const [visible, setVisible] = useState(false);
 
     return (
@@ -44,7 +45,7 @@ export default ({ subuser }: Props) => {
                 </p>
                 <p css={tw`text-2xs text-neutral-500 uppercase`}>Permissions</p>
             </div>
-            {subuser.uuid !== uuid && (
+            {(subuser.uuid !== uuid || rootAdmin) && (
                 <>
                     <Can action={'user.update'}>
                         <button
@@ -56,11 +57,17 @@ export default ({ subuser }: Props) => {
                             <FontAwesomeIcon icon={faPencilAlt} />
                         </button>
                     </Can>
+                </>
+            )}
+            <>
+                {subuser.uuid === uuid ? (
+                    <RemoveSubuserButton subuser={subuser} />
+                ) : (
                     <Can action={'user.delete'}>
                         <RemoveSubuserButton subuser={subuser} />
                     </Can>
-                </>
-            )}
+                )}
+            </>
         </GreyRowBox>
     );
 };

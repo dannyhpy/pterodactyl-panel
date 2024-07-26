@@ -24,10 +24,20 @@ abstract class SubuserRequest extends ClientApiRequest
             return false;
         }
 
+        // Always authorize requests from a root admin.
+        if ($this->user()->root_admin) {
+            return true;
+        }
+
         $user = $this->route()->parameter('user');
         // Don't allow a user to edit themselves on the server.
         if ($user instanceof User) {
             if ($user->uuid === $this->user()->uuid) {
+                // Except if they want to delete themselves from the server.
+                if ($this->method() === Request::METHOD_DELETE) {
+                    return true;
+                }
+
                 return false;
             }
         }
