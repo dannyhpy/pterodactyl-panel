@@ -1,8 +1,8 @@
 #!/bin/ash -e
 cd /app
 
-mkdir -p /var/log/panel/logs/ /var/log/supervisord/ /var/log/nginx/ /var/log/php7/ \
-  && chmod 777 /var/log/panel/logs/ \
+mkdir -p /var/log/panel/ /var/log/supervisord/ /var/log/nginx/ /var/log/php7/ \
+  && chown -R nginx:nginx /app/storage/logs \
   && ln -s /app/storage/logs/ /var/log/panel/
 
 ## check for .env file and generate app keys if missing
